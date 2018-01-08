@@ -6,13 +6,16 @@
 
 #include <QMessageBox>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QSqlRecord user, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     normalClose = true;
     this->resize(1600,900);
+    currentUser.id=user.value("user_id").toInt();
+    currentUser.fio=user.value("user_fio").toString();
+    infoUser2StatusBar();
 
 
 }
@@ -21,20 +24,11 @@ void MainWindow::show()
 {
     QMainWindow::show();
     // Call your special function here.
-        LoginDialog *loginDlg = new LoginDialog();
-        loginDlg->move(this->geometry().center().x() - loginDlg->geometry().center().x(), this->geometry().center().y() - loginDlg->geometry().center().y());
-        loginDlg->exec();
+    ConnectionDialog *connDlg = new ConnectionDialog();
 
-//move(parent->geometry().center().x() - rect().center().x(), parent->geometry().center().y() - rect().center().y());
+    connDlg->move(this->geometry().center().x() - connDlg->geometry().center().x(), this->geometry().center().y() - connDlg->geometry().center().y());
+    connDlg->exec();
 
-        if(loginDlg->result()==QDialog::Rejected){
-            normalClose=false;
-            this->close();
-        }
-        user = loginDlg->getUser();
-        infoUser2StatusBar();
-        ConnectionDialog *connDlg = new ConnectionDialog();
-        connDlg->exec();
 
 }
 
@@ -51,12 +45,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
                               "Уверены?",
                               QMessageBox::Yes|QMessageBox::No))
         {
-            event->accept();
             qInfo(logInfo()) << "Завершение работы программы.";
+            event->accept();
         }
     } else {
-            event->accept();
-            qInfo(logInfo()) << "Не выполнена аутентификация. Завершение работы программы.";
+        qInfo(logInfo()) << "Не выполнена аутентификация. Завершение работы программы.";
+        event->accept();
         }
 
 }
@@ -64,6 +58,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::infoUser2StatusBar()
 {
     labelUser = new QLabel(this);
-    labelUser->setText("Пользователь: "+user.value("user_fio").toString());
+    labelUser->setText("Пользователь: "+currentUser.fio);
     ui->statusBar->addPermanentWidget(labelUser);
 }

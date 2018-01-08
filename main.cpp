@@ -14,6 +14,7 @@
 
 #include "loggingcategories.h"
 #include "databases.h"
+#include "logindialog.h"
 
 
 // Умный указатель на файл логирования
@@ -54,12 +55,12 @@ int main(int argc, char *argv[])
 //        return 1;
 //    }
 
-//    LoginDialog *loginDlg = new LoginDialog();
-//    loginDlg->exec();
-//    if(loginDlg->result()==QDialog::Rejected)
-//        return 1;
+    LoginDialog *loginDlg = new LoginDialog();
+    loginDlg->exec();
+    if(loginDlg->result()==QDialog::Rejected)
+        return 1;
 
-    MainWindow *w = new MainWindow();
+    MainWindow *w = new MainWindow(loginDlg->getUser());
 
     w->show();
 

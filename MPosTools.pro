@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,14 +28,16 @@ SOURCES += \
         mainwindow.cpp \
     loggingcategories.cpp \
     logindialog.cpp \
-    connectiondialog.cpp
+    connectiondialog.cpp \
+    dbaseconnect.cpp
 
 HEADERS += \
         mainwindow.h \
     loggingcategories.h \
     databases.h \
     logindialog.h \
-    connectiondialog.h
+    connectiondialog.h \
+    dbaseconnect.h
 
 FORMS += \
         mainwindow.ui \

@@ -6,6 +6,12 @@
 #include <QSqlRecord>
 #include <QLabel>
 
+struct userdata
+{
+    int id;
+    QString fio;
+};
+
 namespace Ui {
 class MainWindow;
 }
@@ -15,14 +21,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QSqlRecord user, QWidget *parent = 0);
     ~MainWindow();
     void show();
 
 private:
     Ui::MainWindow *ui;
     bool normalClose;
-    QSqlRecord user;
+    userdata currentUser;
     QLabel *labelUser;
 private:
     void closeEvent(QCloseEvent *event);

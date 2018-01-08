@@ -10,7 +10,8 @@
 
 static bool createTable()
 {
-    QSqlQuery query;
+    QSqlDatabase dblite = QSqlDatabase::database("lite");
+    QSqlQuery query = QSqlQuery(dblite);
     QString strSQL = "CREATE TABLE users "
                      "(user_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                      "user_name VARCHAR(50) NOT NULL, "
