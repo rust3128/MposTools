@@ -36,6 +36,7 @@ void DBaseConnect::createConnection()
 
         emit connectionError(errorString);
         emit fin();
+        return;
 
     }
     emit sendStatus(true);

@@ -15,21 +15,26 @@ MainWindow::MainWindow(QSqlRecord user, QWidget *parent) :
     this->resize(1600,900);
     currentUser.id=user.value("user_id").toInt();
     currentUser.fio=user.value("user_fio").toString();
+
     infoUser2StatusBar();
-
-
 }
 
 void MainWindow::show()
 {
     QMainWindow::show();
-    // Call your special function here.
+//    Call your special function here.
     ConnectionDialog *connDlg = new ConnectionDialog();
+    connect(connDlg,SIGNAL(sendConnInfo(QMap<QString,QString>)),this,SLOT(getConnInfo(QMap<QString,QString>)));
 
     connDlg->move(this->geometry().center().x() - connDlg->geometry().center().x(), this->geometry().center().y() - connDlg->geometry().center().y());
     connDlg->exec();
 
+    infoConnect2StatusBar();
+}
 
+void MainWindow::getConnInfo(QMap<QString, QString> connInfo)
+{
+    centalDatabase = connInfo;
 }
 
 MainWindow::~MainWindow()
@@ -60,4 +65,25 @@ void MainWindow::infoUser2StatusBar()
     labelUser = new QLabel(this);
     labelUser->setText("Пользователь: "+currentUser.fio);
     ui->statusBar->addPermanentWidget(labelUser);
+}
+
+void MainWindow::infoConnect2StatusBar()
+{
+        QMapIterator<QString, QString> i(centalDatabase);
+         while (i.hasNext()) {
+             i.next();
+             qDebug() << i.key() << ": " << i.value() << endl;
+         }
+    labelConnInfo = new QLabel(this);
+    labelConnInfo->setText("Подключено: " + centalDatabase.value("connname")+ " "
+                           + centalDatabase.value("server")+":"+centalDatabase.value("basename"));
+    ui->statusBar->addWidget(labelConnInfo);
+}
+
+void MainWindow::on_actionConnect_triggered()
+{
+//    ConnectionDialog *connDlg = new ConnectionDialog();
+
+//    connDlg->move(this->geometry().center().x() - connDlg->geometry().center().x(), this->geometry().center().y() - connDlg->geometry().center().y());
+//    connDlg->exec();
 }

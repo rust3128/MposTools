@@ -136,14 +136,16 @@ void ConnectionDialog::checkConnectionButton_clicked()
 void ConnectionDialog::on_pushButtonConnect_clicked()
 {
     thread = new QThread;
-    progress = new QProgressDialog();
+
     isConnected =true;
+    progress = new QProgressDialog();
     progress->setWindowModality(Qt::WindowModal);
     progress->setLabelText("Подключение к центральной базе данных...");
     progress->setCancelButton(0);
     progress->setRange(0,0);
     progress->setMinimumDuration(0);
 
+    database.insert("connname",ui->lineEditName->text().trimmed());
     database.insert("server", ui->lineEditServer->text().trimmed());
     database.insert("basename",ui->lineEditDataBase->text().trimmed());
     database.insert("login",ui->lineEditLogin->text().trimmed());
@@ -151,12 +153,13 @@ void ConnectionDialog::on_pushButtonConnect_clicked()
 
     DBaseConnect *dbConn = new DBaseConnect(database);
 
-    connect(thread,SIGNAL(started()),this,SLOT(startDBConnect()));
-    connect(thread,SIGNAL(started()),dbConn,SLOT(createConnection()));
-    connect(thread,SIGNAL(finished()),this,SLOT(finishDBConnect()));
     connect(dbConn,SIGNAL(sendStatus(bool)),this,SLOT(getStaus(bool)));
     connect(dbConn,SIGNAL(connectionError(QString)),this,SLOT(errogConnectInfo(QString)));
     connect(dbConn,SIGNAL(fin()),thread,SLOT(terminate()));
+    connect(thread,SIGNAL(started()),this,SLOT(startDBConnect()));
+    connect(thread,SIGNAL(started()),dbConn,SLOT(createConnection()));
+    connect(thread,SIGNAL(finished()),this,SLOT(finishDBConnect()));
+
 
 
     thread->start();
@@ -173,8 +176,8 @@ void ConnectionDialog::startDBConnect()
 void ConnectionDialog::finishDBConnect()
 {
     progress->cancel();
-    qDebug() << "Finish";
     if(isConnected) {
+        emit sendConnInfo(database);
         this->accept();
     }
 }
@@ -184,7 +187,6 @@ void ConnectionDialog::errogConnectInfo(QString str)
     QMessageBox::critical(0, qApp->tr("Не могу открыть базу данных"),
                               QString("Не могу установить соединение с центральной БД!\nПричина: %1\n Проверьте настройки подключения.").arg(str),
                               QMessageBox::Ok);
-    isConnected=false;
     qDebug() << "Error slot";
 }
 

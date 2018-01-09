@@ -21,6 +21,8 @@ public:
     explicit ConnectionDialog(QWidget *parent = 0);
     ~ConnectionDialog();
 
+signals:
+    void sendConnInfo(QMap<QString, QString>);
 private slots:
     void on_pushButtonAdd_clicked();
     void connectSelectionChanged(QItemSelection selection);

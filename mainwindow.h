@@ -25,14 +25,21 @@ public:
     ~MainWindow();
     void show();
 
+private slots:
+    void on_actionConnect_triggered();
+    void getConnInfo(QMap<QString, QString> connInfo);
+
 private:
     Ui::MainWindow *ui;
     bool normalClose;
     userdata currentUser;
     QLabel *labelUser;
+    QLabel *labelConnInfo;
+    QMap<QString, QString> centalDatabase;
 private:
     void closeEvent(QCloseEvent *event);
     void infoUser2StatusBar();
+    void infoConnect2StatusBar();
 
 };
 
