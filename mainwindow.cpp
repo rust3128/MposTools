@@ -69,12 +69,9 @@ void MainWindow::infoUser2StatusBar()
 
 void MainWindow::infoConnect2StatusBar()
 {
-        QMapIterator<QString, QString> i(centalDatabase);
-         while (i.hasNext()) {
-             i.next();
-             qDebug() << i.key() << ": " << i.value() << endl;
-         }
     labelConnInfo = new QLabel(this);
+    labelConnInfo->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    labelConnInfo->setStyleSheet("QLabel { color : green; }");
     labelConnInfo->setText("Подключено: " + centalDatabase.value("connname")+ " "
                            + centalDatabase.value("server")+":"+centalDatabase.value("basename"));
     ui->statusBar->addWidget(labelConnInfo);
